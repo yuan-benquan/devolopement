@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+	<!--导入属性文件-->
+	<context:property-placeholder location="classpath:JDBC.properties"/>
+
+	<bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="c3p0">
+		<property name="driverClass" value="${driverClass}"/>
+		<property name="jdbcUrl" value="${jdbcUrl}"/>
+		<property name="user" value="${user}"/>
+		<property name="password" value="${password}"/>
+ 	</bean>
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="c3p0"/>
+		<!-- <property name="mapperLocations" value="classpath:com/ck/mappers/*.xml"/>-->
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+ 	</bean>
+	<!--自动生成dao的代理类-->
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	<property name="basePackage" value="com.ck.dao"/>
+</bean>
+
+
+	<!--配置事务管理器-->
+
+<!--<bean id="tm" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="c3p0"></property>
+ </bean>
+	&lt;!&ndash;配置通知&ndash;&gt;
+	<tx:advice id="advice" transaction-manager="tm">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+	&lt;!&ndash;配置aop&ndash;&gt;
+<aop:config >
+	<aop:pointcut id="pc" expression="execution(* com.ck.service.*.*(..))"/>
+	<aop:advisor advice-ref="advice" pointcut-ref="pc"/>
+</aop:config>-->
+
+</beans>
